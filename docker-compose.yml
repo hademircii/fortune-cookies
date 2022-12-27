@@ -1,0 +1,14 @@
+version: '3'
+
+services:
+  fortune-cookie:
+    build: .
+    image: fortune_cookie_service
+    environment:
+      - TWILIO_ACCOUNT_SID=REPLACEME
+      - TWILIO_AUTH_TOKEN=REPLACEME
+      - TWILIO_FROM_PHONENUMBER=REPLACEME_NUM
+      - TWILIO_RECEIVER_PHONENUMBERS=["REPLACEME_NUM"]
+      - SOURCE_FILEPATH=test.csv
+    volumes:
+      - ./data/test.csv:/app/test.csv
