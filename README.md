@@ -1,0 +1,2 @@
+# fortune-cookies
+daily wisdom
