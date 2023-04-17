@@ -1,3 +1,7 @@
 click
 pydantic
 aiohttp
+fastapi
+uvicorn[standard]
+aiosqlite
+black
