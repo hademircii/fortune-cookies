@@ -1,7 +1,10 @@
 click
 pydantic
+pydantic-settings
 aiohttp
 fastapi
 uvicorn[standard]
 aiosqlite
-black
+alembic
+sqlalchemy
+psycopg2-binary

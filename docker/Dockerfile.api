@@ -1,0 +1,15 @@
+FROM tiangolo/uvicorn-gunicorn-fastapi:python3.9
+
+COPY ./requirements.txt /requirements.txt
+
+RUN pip install --no-cache-dir --upgrade -r /requirements.txt
+# COPY ./app/migrations /app/migrations
+COPY ./bin/prestart.sh /app/prestart.sh
+
+COPY ./alembic.ini /app/alembic.ini
+
+COPY ./app /app
+
+ENV MODULE_NAME "app.api"
+
+

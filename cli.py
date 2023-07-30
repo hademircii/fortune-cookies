@@ -8,13 +8,11 @@ def cli():
 
 
 @cli.command()
-@click.option('--interval', type=int, required=True)
-@click.option('--filepath', type=str, required=True)
-@click.option('--source-format', type=click.Choice(['csv']), required=True)
-def run_service(interval, filepath, source_format):
-    if source_format == 'csv':
-        main(interval, filepath)
+@click.option("--interval", type=int, required=True)
+@click.option("--server-address", type=str, required=True)
+def run_service(interval, server_address):
+    main(interval, server_address)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     cli()

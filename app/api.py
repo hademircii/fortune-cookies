@@ -12,11 +12,12 @@ from fastapi import (
     Query,
 )
 from fastapi.middleware.cors import CORSMiddleware
-from pydantic import BaseModel, BaseSettings, validator
+from pydantic import BaseModel, validator
+from pydantic_settings import BaseSettings
 from sqlalchemy import create_engine, Column, Integer, String, ForeignKey, asc
 from sqlalchemy.sql.expression import func
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import sessionmaker, relationship, joinedload
+from sqlalchemy.orm import sessionmaker, relationship
 
 
 app = FastAPI()
@@ -30,7 +31,7 @@ app.add_middleware(
 
 
 class Settings(BaseSettings):
-    database_url: str = "sqlite:///./test.db"
+    database_url: str = "sqlite:///./fortune_cookie.db"
     api_key: str = "not_a_real_key"
 
 
@@ -125,6 +126,9 @@ class Quote(BaseQuote):
     class Config:
         orm_mode = True
 
+    def __str__(self):
+        return f"{self.text}\n{self.author.name}\n{self.reference}"
+
 
 class CreatePhoneNumber(BaseModel):
     phone_number: str
@@ -174,7 +178,7 @@ def get_random_quote(db: Session) -> QuoteModel:
     return db.query(QuoteModel).order_by(func.random()).first()
 
 
-router = APIRouter(
+quotes_router = APIRouter(
     prefix="/quotes",
     tags=["quotes"],
     dependencies=[Depends(verify_api_key)],
@@ -187,7 +191,7 @@ quote_example = {
 }
 
 
-@router.post("/create", status_code=200, response_model=Quote)
+@quotes_router.post("/create", status_code=200, response_model=Quote)
 async def create_quote(
     quote: CreateQuote = Body(..., example=quote_example),
     db: Session = Depends(get_db),
@@ -217,7 +221,7 @@ async def create_quote(
     return new_quote
 
 
-@router.get("/random", status_code=200, response_model=Quote)
+@quotes_router.get("/random", status_code=200, response_model=Quote)
 async def random_quote(db: Session = Depends(get_db)):
     quote = get_random_quote(db)
     if not quote:
@@ -225,7 +229,7 @@ async def random_quote(db: Session = Depends(get_db)):
     return quote
 
 
-app.include_router(router)
+app.include_router(quotes_router)
 
 router = APIRouter(
     prefix="/listeners",
@@ -293,6 +297,11 @@ async def read_phone_numbers(
         "total_records": total_records,
         "results": query,
     }
+
+
+@router.get("/health", response_model=PhoneNumbersPagination)
+async def health():
+    return {}
 
 
 app.include_router(router)

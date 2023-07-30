@@ -1,6 +1,6 @@
 import aiohttp
 from typing import AsyncGenerator, Tuple
-from .api import PhoneNumber, Quote
+from ..api import PhoneNumber, Quote
 
 
 class AsyncFortuneCookie:
@@ -50,11 +50,10 @@ class AsyncFortuneCookie:
             response_data = await response.json()
             return Quote(**response_data)
 
-
-async def a_message_for_each(
-    server_address,
-) -> AsyncGenerator[Tuple[PhoneNumber, Quote]]:
-    async with AsyncFortuneCookie(server_address) as client:
-        quote = await client.get_random_quote()
-        async for phone_number in client:
-            yield phone_number, quote
+    async def a_message_for_each(
+        self,
+    ) -> AsyncGenerator[Tuple[PhoneNumber, Quote], None]:
+        async with self as quote_client:
+            quote = await quote_client.get_random_quote()
+            async for phone_number in quote_client:
+                yield phone_number, quote

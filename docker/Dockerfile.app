@@ -8,6 +8,7 @@ COPY . /app
 WORKDIR /app
 
 ENV INTERVAL 10
+ENV SERVER_ADDRESS "fortune-cookie-server"
 
 RUN chmod +x ./bin/entrypoint.sh
 
