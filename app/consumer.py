@@ -4,14 +4,20 @@ from .api import PhoneNumber, Quote
 
 
 class AsyncFortuneCookie:
-    def __init__(self, server_address: str, api_key: str = None):
+    def __init__(self, server_address: str, api_key: str = None, session=None):
         self.server_address = server_address
         self.api_key = api_key
+        self._session = session
+
+    @property
+    def session(self):
+        if not self._session:
+            self._session = aiohttp.ClientSession(
+                headers={"api-key": self.api_key or ""}
+            )
+        return self._session
 
     async def __aenter__(self):
-        self.session = aiohttp.ClientSession(
-            headers={"api-key": self.api_key or ""}
-        )
         return self
 
     async def __aexit__(self, exc_type, exc_value, traceback):

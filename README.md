@@ -1,10 +1,13 @@
 # Fortune Cookie Wisdom
 
-Embark on a journey through literature and wisdom with Fortune Cookie Wisdom, a curated mobile delivery system for thought-provoking quotes.
+an app that texts you curated quotes, periodically.
 
-## Design and Capabilities
-
- asynchronous programming, HTTP communication, object-oriented design, error handling, and logging. The architecture involves a PostgreSQL database, an API server, and a periodic consumer service, creating an ecosystem that delivers quotes to registered phone numbers.
+## The App
+Uses my favourite libraries like FastAPI, Pydantic and SQLAlchemy, together in
+a server to manage queotes and receivers.
+there is a consumer built with asyncio and aiottp, managed by a main module and runs
+forever. some techniques for async programming, object-oriented design and
+error handling are there with the style of Python I enjoy.
 
 ## Running the Application
 
