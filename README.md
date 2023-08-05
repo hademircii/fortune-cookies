@@ -16,6 +16,7 @@ Using Docker, you can easily set up and run the application:
 ```bash
 $ docker-compose up
 ```
+the go to ```localhost:80/docs/``` in your browser.
 
 Ensure you have [Docker](https://docs.docker.com/get-docker/) and [Docker Compose](https://docs.docker.com/compose/install/) installed. The application also requires Twilio account credentials (`TWILIO_ACCOUNT_SID`, `TWILIO_AUTH_TOKEN`, and `TWILIO_FROM_PHONENUMBER`) and
 an api key (`FORTUNE_COOKIE_API_KEY`).
