@@ -1,3 +1,10 @@
 click
 pydantic
+pydantic-settings
 aiohttp
+fastapi
+uvicorn[standard]
+aiosqlite
+alembic
+sqlalchemy
+psycopg2-binary
