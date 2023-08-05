@@ -237,7 +237,7 @@ router = APIRouter(
     dependencies=[Depends(verify_api_key)],
 )
 
-phone_number_example = {"phone_number": "18319111234"}
+phone_number_example = {"phone_number": "11111111111"}
 
 
 @router.post("/create", status_code=200, response_model=PhoneNumber)

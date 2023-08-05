@@ -9,8 +9,8 @@ services:
       - TWILIO_ACCOUNT_SID=${TWILIO_ACCOUNT_SID}
       - TWILIO_AUTH_TOKEN=${TWILIO_AUTH_TOKEN}
       - TWILIO_FROM_PHONENUMBER=${TWILIO_FROM_PHONENUMBER}
-      - FORTUNE_COOKIE_API_KEY=NOT_A_REAL_KEY
-      - INTERVAL=30
+      - FORTUNE_COOKIE_API_KEY=${FORTUNE_COOKIE_API_KEY}
+      - INTERVAL=43200
     depends_on:
       fortune-cookie-server:
         condition: service_healthy
@@ -23,7 +23,7 @@ services:
       - "80:80"
     environment:
       - DATABASE_URL=postgresql://postgres:postgres@postgres:5432/fortune_cookie
-      - API_KEY=NOT_A_REAL_KEY
+      - API_KEY=${FORTUNE_COOKIE_API_KEY}
     depends_on:
       postgres:
         condition: service_healthy
