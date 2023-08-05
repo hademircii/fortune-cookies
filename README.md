@@ -4,7 +4,7 @@ Embark on a journey through literature and wisdom with Fortune Cookie Wisdom, a 
 
 ## Design and Capabilities
 
-This application reflects a proficient implementation of modern Python capabilities, highlighting asynchronous programming, HTTP communication, object-oriented design, error handling, and logging. The architecture involves a PostgreSQL database, an API server, and a periodic consumer service, creating an ecosystem that delivers quotes to registered phone numbers.
+ asynchronous programming, HTTP communication, object-oriented design, error handling, and logging. The architecture involves a PostgreSQL database, an API server, and a periodic consumer service, creating an ecosystem that delivers quotes to registered phone numbers.
 
 ## Running the Application
 
