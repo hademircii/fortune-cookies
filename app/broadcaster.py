@@ -1,4 +1,5 @@
 import asyncio
+import aiohttp
 from collections import deque
 import logging
 
@@ -21,12 +22,12 @@ class Message:
 class Broadcaster:
     def __init__(
         self,
-        message_generator,
+        quote_client,
         web_client,
         settings,
         interval=10,
     ):
-        self.message_generator = message_generator
+        self.quote_client = quote_client
         self.web_client = web_client
         self.interval = interval
         self.settings = settings
@@ -36,7 +37,7 @@ class Broadcaster:
         while self.outbound_messages:
             m = self.outbound_messages.popleft()
             async with self.web_client.post(
-                self.settings.twilio_endpoint, timeout=1, data=m.as_dict()
+                self.settings.twilio_endpoint, timeout=1, data=m.as_dict
             ) as response:
                 if response.status >= 400:
                     try:
@@ -51,18 +52,21 @@ class Broadcaster:
 
     async def run_forever(self):
         while True:
-            async for receiver_number, message_text in self.message_generator():
-                self.outbound_messages.append(
-                    Message(
-                        self.settings.from_number,
-                        receiver_number,
-                        message_text,
+            try:
+                async for receiver_number, message_text in self.quote_client.a_message_for_each():
+                    self.outbound_messages.append(
+                        Message(
+                            self.settings.from_number,
+                            receiver_number.phone_number,
+                            message_text,
+                        )
                     )
-                )
-                log.info(
-                    f"created message: [{message_text.body}] for receiver: [{receiver_number}]..."
-                )
-
-            await self.send_messages()
+                    log.info(
+                        f"created message: [{message_text}] for receiver: [{receiver_number}]..."
+                    )
+                await self.send_messages()
+            except Exception as e:
+                log.exception(e)
+                log.error(f"failed with exception: [{e}]")
 
             await asyncio.sleep(self.interval)

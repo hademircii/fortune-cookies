@@ -2,8 +2,8 @@ import asyncio
 import aiohttp
 from pydantic import Field
 from pydantic_settings import BaseSettings
-from elements.broadcaster import Broadcaster
-from elements.consumer import AsyncFortuneCookie
+from .broadcaster import Broadcaster
+from .consumer import AsyncFortuneCookie
 
 API_ENDPOINT_FORMAT = (
     "https://api.twilio.com/2010-04-01/Accounts/{}/Messages.json"
@@ -14,6 +14,7 @@ class Settings(BaseSettings):
     account_sid: str = Field(..., alias="TWILIO_ACCOUNT_SID")
     auth_token: str = Field(..., alias="TWILIO_AUTH_TOKEN")
     from_number: str = Field(..., alias="TWILIO_FROM_PHONENUMBER")
+    api_key: str = Field(..., alias="FORTUNE_COOKIE_API_KEY")
 
     @property
     def twilio_endpoint(self):
@@ -29,11 +30,11 @@ def main(interval, server_address):
         connector=aiohttp.TCPConnector(limit_per_host=4),
     )
 
-    quote_client = AsyncFortuneCookie(server_address)
+    quote_client = AsyncFortuneCookie(server_address, api_key=settings.api_key)
 
     service = Broadcaster(
-        mobile_client,
         quote_client,
+        mobile_client,
         settings=settings,
         interval=interval,
     )

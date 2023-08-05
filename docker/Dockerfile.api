@@ -10,6 +10,6 @@ COPY ./alembic.ini /app/alembic.ini
 
 COPY ./app /app
 
-ENV MODULE_NAME "app.api"
+ENV MODULE_NAME "api"
 
 

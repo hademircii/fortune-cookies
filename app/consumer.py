@@ -1,14 +1,17 @@
 import aiohttp
 from typing import AsyncGenerator, Tuple
-from ..api import PhoneNumber, Quote
+from .api import PhoneNumber, Quote
 
 
 class AsyncFortuneCookie:
-    def __init__(self, server_address: str):
+    def __init__(self, server_address: str, api_key: str = None):
         self.server_address = server_address
+        self.api_key = api_key
 
     async def __aenter__(self):
-        self.session = aiohttp.ClientSession(timeout=2)
+        self.session = aiohttp.ClientSession(
+            headers={"api-key": self.api_key or ""}
+        )
         return self
 
     async def __aexit__(self, exc_type, exc_value, traceback):
@@ -25,7 +28,7 @@ class AsyncFortuneCookie:
         total_pages = None
         while True:
             async with self.session.get(
-                f"{self.server_address}/phone_numbers",
+                f"{self.server_address}/listeners",
                 params={"page_size": page_size, "page": page},
             ) as response:
                 if response.status >= 400:

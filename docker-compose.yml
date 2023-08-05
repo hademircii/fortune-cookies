@@ -1,14 +1,54 @@
 version: '3'
 
 services:
-  fortune-cookie:
-    build: .
-    image: fortune_cookie_service
+  fortune-cookie-reader:
+    build:
+      context: .
+      dockerfile: ./docker/Dockerfile.app
     environment:
-      - TWILIO_ACCOUNT_SID=REPLACEME
-      - TWILIO_AUTH_TOKEN=REPLACEME
-      - TWILIO_FROM_PHONENUMBER=REPLACEME_NUM
-      - TWILIO_RECEIVER_PHONENUMBERS=["REPLACEME_NUM"]
-      - SOURCE_FILEPATH=test.csv
+      - TWILIO_ACCOUNT_SID=${TWILIO_ACCOUNT_SID}
+      - TWILIO_AUTH_TOKEN=${TWILIO_AUTH_TOKEN}
+      - TWILIO_FROM_PHONENUMBER=${TWILIO_FROM_PHONENUMBER}
+      - FORTUNE_COOKIE_API_KEY=NOT_A_REAL_KEY
+      - INTERVAL=30
+    depends_on:
+      fortune-cookie-server:
+        condition: service_healthy
+
+  fortune-cookie-server:
+    build:
+      context: .
+      dockerfile: ./docker/Dockerfile.api
+    ports:
+      - "80:80"
+    environment:
+      - DATABASE_URL=postgresql://postgres:postgres@postgres:5432/fortune_cookie
+      - API_KEY=NOT_A_REAL_KEY
+    depends_on:
+      postgres:
+        condition: service_healthy
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:80/health" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  postgres:
+    image: postgres:latest
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: fortune_cookie
     volumes:
-      - ./data/test.csv:/app/test.csv
+      - database:/var/lib/postgresql/data
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U postgres" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  database:
+    driver: local

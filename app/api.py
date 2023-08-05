@@ -185,9 +185,9 @@ quotes_router = APIRouter(
 )
 
 quote_example = {
-    "text": "Emergencies have always been the pretext on which the safeguards of individual liberty have been eroded",
-    "author": "Friedrich Hayek",
-    "reference": "The Road to Serfdom (1944)",
+    "text": "For those who have eaten of the tree of knowledge, the paradise is lost.",
+    "author": "Karl Popper",
+    "reference": "The Open Society and Its Enemies",
 }
 
 
@@ -299,9 +299,9 @@ async def read_phone_numbers(
     }
 
 
-@router.get("/health", response_model=PhoneNumbersPagination)
+@app.get("/health")
 async def health():
-    return {}
+    return {"status": "ok"}
 
 
 app.include_router(router)
