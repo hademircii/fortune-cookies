@@ -3,8 +3,8 @@
 an app that texts you curated quotes, periodically.
 
 ## The App
-Uses my favourite libraries like FastAPI, Pydantic and SQLAlchemy, together in
-a server to manage queotes and receivers.
+Uses my favourite libraries like FastAPI, Pydantic, together in
+a server to manage quotes and receivers.
 there is a consumer built with asyncio and aiottp, managed by a main module and runs
 forever. some techniques for async programming, object-oriented design and
 error handling are there with the style of Python I enjoy.
